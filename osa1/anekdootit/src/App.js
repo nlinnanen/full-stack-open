@@ -31,7 +31,6 @@ const App = () => {
       }}>
         vote
       </button>
-
       <h1>Anecdote with most votes</h1>
       <div>
         {anecdotes[votes.indexOf(Math.max(...votes))]}

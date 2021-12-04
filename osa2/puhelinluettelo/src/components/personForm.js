@@ -1,4 +1,3 @@
-import react from "react"
 
 const PersonForm = ({handleNameChange, handleNumberChange, newName, newNumber, addNumber}) => {
     return (      

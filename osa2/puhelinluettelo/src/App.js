@@ -3,14 +3,17 @@ import React, { useEffect, useState } from 'react'
 import PersonForm from './components/personForm'
 import Numbers from './components/numbers'
 import Filter from './components/filter'
+import Message from './components/message'
 
 import services from './services'
 
 const App = () => {
+
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filterWith, setFilterWith] = useState('')
+  const [message, setMessage] = useState(null)
 
   useEffect(() => {
     services
@@ -18,6 +21,10 @@ const App = () => {
       .then((response) => setPersons(response))
   }, [])
 
+  const showMessage = (toShow) => {
+    setMessage(toShow)
+    setTimeout(() => setMessage(null), 3000)
+  }
   const addNumber = (event) => {
     event.preventDefault()
 
@@ -29,21 +36,30 @@ const App = () => {
     if (persons.every(p => p.name !== newName)) {
       services
         .create(personObject)
-        .then(response => setPersons(persons.concat(response)))
-    } else if(window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
-        updateNumber({... personObject, id: persons.find(p => p.name === newName).id})
+        .then((response) => {
+          setPersons(persons.concat(response))
+          showMessage(`Added ${response.name}`)
+        })
+    } else if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+      updateNumber({ ...personObject, id: persons.find(p => p.name === newName).id })
     }
 
     setNewName('')
     setNewNumber('')
   }
 
+
   const removeNumber = (id) => {
-    if(window.confirm(`Delete ${persons.find(p => p.id === id).name}`)) {
+    const name = persons.find(p => p.id === id).name
+    if (window.confirm(`Delete ${name}?`)) {
       services
         .remove(id)
         .then(response => {
           setPersons(persons.filter(person => person.id !== id))
+          showMessage(`Deleted ${name}`)
+        })
+        .catch(response => {
+          showMessage(`Information of ${name} has already been removed from server`)
         })
     }
   }
@@ -53,6 +69,10 @@ const App = () => {
       .update(newObject)
       .then(response => {
         setPersons(persons.map(person => person.id !== response.id ? person : response))
+        showMessage(`Updated ${response.name}`)
+      })
+      .catch(response => {
+        showMessage(`Information of ${newObject.name} has already been removed from server`)
       })
   }
 
@@ -70,6 +90,9 @@ const App = () => {
 
   return (
     <div>
+
+      <Message message={message} />
+
       <h2>Phonebook</h2>
 
       <Filter handleFilterChange={handleFilterChange} filterWith={filterWith} />
@@ -80,7 +103,7 @@ const App = () => {
 
       <h2>Numbers</h2>
 
-      <Numbers persons={persons} filter={filterWith} removeNumber={removeNumber}/>
+      <Numbers persons={persons} filter={filterWith} removeNumber={removeNumber} />
     </div>
   )
 

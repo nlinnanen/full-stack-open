@@ -65,6 +65,7 @@ const App = () => {
   }
 
   const updateNumber = (newObject) => {
+    console.log(newObject)
     services
       .update(newObject)
       .then(response => {

@@ -1,19 +1,10 @@
 const express = require('express')
 const app = express()
 const cors = require('cors')
-const mongoose = require('mongoose')
+
 
 const config = require('./utils/config')
-
-const blogSchema = mongoose.Schema({
-  title: String,
-  author: String,
-  url: String,
-  likes: Number
-})
-
-const Blog = mongoose.model('Blog', blogSchema)
-
+const Blog = require('./models/blog')
 
 mongoose.connect(config.MONGODB_URI)
 

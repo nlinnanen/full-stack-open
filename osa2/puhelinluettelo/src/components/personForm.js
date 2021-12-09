@@ -2,15 +2,15 @@
 
 const PersonForm = ({handleNameChange, handleNumberChange, newName, newNumber, addNumber}) => {
     return (      
-        <form>
-            <div>
-                name: <input onChange={handleNameChange} value={newName}/>
+        <form class="person-form">
+            <div class="name-input flex-space-between">
+                Name: <input onChange={handleNameChange} value={newName}/>
+            </div>
+            <div class="number-input flex-space-between">
+                Number: <input onChange={handleNumberChange} value={newNumber}/>
             </div>
             <div>
-                number: <input onChange={handleNumberChange} value={newNumber}/>
-            </div>
-            <div>
-                <button type="submit" onClick={addNumber}>add</button>
+                <button class="add-btn" type="submit" onClick={addNumber}>Add</button>
             </div>
         </form>
     )

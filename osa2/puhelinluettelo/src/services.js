@@ -12,7 +12,8 @@ const getAll = () => {
 const create = newObject => {
     return axios
         .post(baseUrl, newObject)
-        .then((response) => response.data)
+        .then(response => response.data)
+        
 }
 
 const remove = id => {

@@ -25,6 +25,7 @@ const App = () => {
     setMessage(toShow)
     setTimeout(() => setMessage(null), 3000)
   }
+
   const addNumber = (event) => {
     event.preventDefault()
 
@@ -40,6 +41,10 @@ const App = () => {
           setPersons(persons.concat(response))
           showMessage(`Added ${response.name}`)
         })
+        .catch(error => {
+          console.log(error)
+          showMessage(error.response.data.error)
+        })
     } else if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
       updateNumber({ ...personObject, id: persons.find(p => p.name === newName).id })
     }
@@ -47,7 +52,6 @@ const App = () => {
     setNewName('')
     setNewNumber('')
   }
-
 
   const removeNumber = (id) => {
     const name = persons.find(p => p.id === id).name
@@ -72,9 +76,11 @@ const App = () => {
         setPersons(persons.map(person => person.id !== response.id ? person : response))
         showMessage(`Updated ${response.name}`)
       })
-      .catch(response => {
-        showMessage(`Information of ${newObject.name} has already been removed from server`)
+      .catch(error => {
+        console.log(error)
+        showMessage(error.response.data)
       })
+      
   }
 
   const handleNameChange = (event) => {
@@ -93,18 +99,19 @@ const App = () => {
     <div>
 
       <Message message={message} />
+      <div class="phonebook">
+        <h2>Phonebook</h2>
 
-      <h2>Phonebook</h2>
+        <Filter handleFilterChange={handleFilterChange} filterWith={filterWith} />
 
-      <Filter handleFilterChange={handleFilterChange} filterWith={filterWith} />
+        <h2>Add a new number</h2>
 
-      <h2>add a new</h2>
+        <PersonForm handleNameChange={handleNameChange} handleNumberChange={handleNumberChange} newName={newName} newNumber={newNumber} addNumber={addNumber} />
 
-      <PersonForm handleNameChange={handleNameChange} handleNumberChange={handleNumberChange} newName={newName} newNumber={newNumber} addNumber={addNumber} />
+        <h2>Numbers</h2>
 
-      <h2>Numbers</h2>
-
-      <Numbers persons={persons} filter={filterWith} removeNumber={removeNumber} />
+        <Numbers persons={persons} filter={filterWith} removeNumber={removeNumber} />
+      </div>
     </div>
   )
 

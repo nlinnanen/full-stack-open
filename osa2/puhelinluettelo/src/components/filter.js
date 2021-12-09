@@ -1,8 +1,8 @@
 
 const Filter = ({ handleFilterChange, filterWith }) => {
    return( 
-   <div>
-        filter shown with <input onChange={ handleFilterChange } value={filterWith}/>
+   <div class="filter flex-space-between">
+        Filter shown with&nbsp; <input onChange={ handleFilterChange } value={filterWith}/>
     </div>
    )
 }

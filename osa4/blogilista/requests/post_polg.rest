@@ -1,0 +1,9 @@
+POST http://localhost:3001/api/blogs
+Content-Type: application/json
+
+{
+  "title": "A fun blog",
+  "author": "Teemu Teekkari",
+  "url": "www.teemu.com",
+  "likes": 2
+}

@@ -21,7 +21,8 @@
   "devDependencies": {
     "cross-env": "^7.0.3",
     "eslint": "^8.4.1",
-    "jest": "^27.4.4"
+    "jest": "^27.4.4",
+    "supertest": "^6.1.6"
   },
   "jest": {
     "testEnvironment": "node"

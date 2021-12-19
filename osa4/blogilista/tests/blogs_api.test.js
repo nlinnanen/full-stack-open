@@ -63,7 +63,7 @@ test('post writes correct data to database', async () => {
   await api
     .post('/api/blogs')
     .send(newBlog)
-    .expect(201)
+    .expect(200)
     .expect('Content-Type', /application\/json/)
 
   const response = await api.get('/api/blogs')
@@ -87,7 +87,7 @@ test('default value to likes is 0', async () => {
   await api
     .post('/api/blogs')
     .send(newBlog)
-    .expect(201)
+    .expect(200)
     .expect('Content-Type', /application\/json/)
 
   const response = await api.get('/api/blogs')
@@ -125,7 +125,43 @@ test('if url is undefined status is 400', async () => {
     .send(newBlog)
     .expect(400)
 
-}) 
+})
+
+test('deleting a blog works', async () => {
+  const blogsInTheStart = await api.get(`/api/blogs`)
+  const idToDelte = blogsInTheStart.body[0].id
+
+  await api
+    .delete(`/api/blogs/${idToDelte}`)
+    .expect(204)
+
+  const blogsInTheEnd = await api.get(`/api/blogs`)
+
+  expect(blogsInTheEnd.body).toHaveLength(blogsInTheStart.body.length - 1)
+
+  const idsInResult = blogsInTheEnd.body.map(blog => blog.id)
+  expect(idsInResult).not.toContain(idToDelte)
+  
+})
+
+test('updating a blog works', async () => {
+  const blogsInTheStart = await api.get('/api/blogs')
+  const updatedBlog = {
+    ...blogsInTheStart.body[0], 
+    likes: Math.floor(Math.random()*1000)
+  }
+
+  await api
+    .put(`/api/blogs/${updatedBlog.id}`)
+    .send(updatedBlog)
+    .expect(200)
+    .expect('Content-Type', /application\/json/)
+
+  const blogsInTheEnd = (await api.get('/api/blogs')).body
+  const blogsByLikes = blogsInTheEnd.map(b => b.likes)
+
+  expect(blogsByLikes).toContain(updatedBlog.likes)
+})
 
 afterAll(() => {
   mongoose.connection.close()

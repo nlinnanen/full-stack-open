@@ -18,6 +18,13 @@ usersRouter.get('/', async (request, response) => {
 usersRouter.post('/', async (request, response) => {
   const body = request.body
 
+  if(body.password.length < 3)  {
+    throw {
+      name: 'ValidationError',
+      message: 'Password must be atleast 3 characters long'
+    }
+  }
+
   const passwordHash = await bcrypt.hash(body.password, 10)
 
   const user = new User({

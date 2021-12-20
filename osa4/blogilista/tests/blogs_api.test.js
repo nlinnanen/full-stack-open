@@ -5,28 +5,43 @@ const app = require('../app')
 const api = supertest(app)
 
 const Blog = require('../models/blog')
+const User = require('../models/user')
 
 const initialBlogs = [
   {
-    "title": "Another fun blog",
-    "author": "Tiina Teekkari",
-    "url": "www.tiina.com",
-    "likes": 4
+    'title': 'Another fun blog',
+    'author': 'Tiina Teekkari',
+    'url': 'www.tiina.com',
+    'likes': 4
   },
   {
-    "title": "Fun blog",
-    "author": "Teemu Teekkari",
-    "url": "www.teemu.com",
-    "likes": 123
+    'title': 'Fun blog',
+    'author': 'Teemu Teekkari',
+    'url': 'www.teemu.com',
+    'likes': 123
   }
 ]
 
+const initialUsers = [
+  {
+    'username': 'tiinat',
+    'name': 'Tiina Teekkari',
+    'password': 'password123'
+  },
+  {
+    'username': 'tteekkari123_:M;*^`?`=?',
+    'name': 'Teemu Teekkari',
+    'password': 'ossinlampi'
+  }
+]
+
+
 beforeEach(async () => {
   await Blog.deleteMany({})
-  let blogObject = new Blog(initialBlogs[0])
-  await blogObject.save()
-  blogObject = new Blog(initialBlogs[1])
-  await blogObject.save()
+  await Blog.insertMany(initialBlogs)
+
+  await User.deleteMany({})
+  await User.insertMany(initialUsers)
 })
 
 describe('Get method', () => {
@@ -56,9 +71,9 @@ describe('Posting blogs', () => {
   test('post writes correct data to database', async () => {
 
     const newBlog = {
-      title: "Another fun blog",
-      author: "Tiina Teekkari",
-      url: "www.tiina.com",
+      title: 'Another fun blog',
+      author: 'Tiina Teekkari',
+      url: 'www.tiina.com',
       likes: 4
     }
 
@@ -81,9 +96,9 @@ describe('Posting blogs', () => {
   test('default value to likes is 0', async () => {
 
     const newBlog = {
-      title: "Another fun blog",
-      author: "Tiina Teekkari",
-      url: "www.tiina.com",
+      title: 'Another fun blog',
+      author: 'Tiina Teekkari',
+      url: 'www.tiina.com',
     }
 
     await api
@@ -104,8 +119,8 @@ describe('Posting blogs', () => {
   test('if title is undefined status is 400', async () => {
 
     const newBlog = {
-      author: "Tiina Teekkari",
-      url: "www.tiina.com"
+      author: 'Tiina Teekkari',
+      url: 'www.tiina.com'
     }
 
     await api
@@ -118,8 +133,8 @@ describe('Posting blogs', () => {
   test('if url is undefined status is 400', async () => {
 
     const newBlog = {
-      title: "even more fun blogs",
-      author: "Tiina Teekkari"
+      title: 'even more fun blogs',
+      author: 'Tiina Teekkari'
     }
 
     await api
@@ -134,14 +149,14 @@ describe('Posting blogs', () => {
 describe('Deleting blogs',  () => {
 
   test('deleting a blog works', async () => {
-    const blogsInTheStart = await api.get(`/api/blogs`)
+    const blogsInTheStart = await api.get('/api/blogs')
     const idToDelte = blogsInTheStart.body[0].id
 
     await api
       .delete(`/api/blogs/${idToDelte}`)
       .expect(204)
 
-    const blogsInTheEnd = await api.get(`/api/blogs`)
+    const blogsInTheEnd = await api.get('/api/blogs')
 
     expect(blogsInTheEnd.body).toHaveLength(blogsInTheStart.body.length - 1)
 

@@ -10,9 +10,6 @@ blogsRouter.get('/', async (request, response) => {
   } else {
     response.status(404).end()
   }
-  const savedBlog = await blog.save()
-  response.json(savedBlog)
-
 })
 
 blogsRouter.post('/', async (request, response) => {

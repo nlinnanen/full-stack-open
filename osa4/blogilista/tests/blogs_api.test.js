@@ -7,41 +7,24 @@ const api = supertest(app)
 const Blog = require('../models/blog')
 const User = require('../models/user')
 
-const initialBlogs = [
-  {
-    'title': 'Another fun blog',
-    'author': 'Tiina Teekkari',
-    'url': 'www.tiina.com',
-    'likes': 4
-  },
-  {
-    'title': 'Fun blog',
-    'author': 'Teemu Teekkari',
-    'url': 'www.teemu.com',
-    'likes': 123
-  }
-]
+const { initialBlogs, initialUsersGenerator } = require('./test_helper')
+let initialUsers = [{}]
 
-const initialUsers = [
-  {
-    'username': 'tiinat',
-    'name': 'Tiina Teekkari',
-    'password': 'password123'
-  },
-  {
-    'username': 'tteekkari123_:M;*^`?`=?',
-    'name': 'Teemu Teekkari',
-    'password': 'ossinlampi'
-  }
-]
-
+beforeAll(async () => {
+  initialUsers = await initialUsersGenerator()
+})
 
 beforeEach(async () => {
-  await Blog.deleteMany({})
-  await Blog.insertMany(initialBlogs)
-
   await User.deleteMany({})
   await User.insertMany(initialUsers)
+  await Blog.deleteMany({})
+
+  const users = await User.find({})
+  const intialBlogsWithUserIds = initialBlogs.map((b, i) => {
+    return { ...b, userId: users[i % initialUsers.length].userId }
+  })
+
+  await Blog.insertMany(intialBlogsWithUserIds)
 })
 
 describe('Get method', () => {
@@ -70,11 +53,14 @@ describe('Get method', () => {
 describe('Posting blogs', () => {
   test('post writes correct data to database', async () => {
 
+    const user = (await api.get('api/users')).body[0]
+
     const newBlog = {
       title: 'Another fun blog',
       author: 'Tiina Teekkari',
       url: 'www.tiina.com',
-      likes: 4
+      likes: 4,
+      userId: user._id
     }
 
     await api
@@ -95,10 +81,13 @@ describe('Posting blogs', () => {
 
   test('default value to likes is 0', async () => {
 
+    const user = (await api.get('api/users')).body[0]
+
     const newBlog = {
       title: 'Another fun blog',
       author: 'Tiina Teekkari',
       url: 'www.tiina.com',
+      userId: user._id
     }
 
     await api
@@ -116,37 +105,47 @@ describe('Posting blogs', () => {
 
   })
 
-  test('if title is undefined status is 400', async () => {
+  test('if title is undefined status is 400 and the error message is relevant', async () => {
+
+    const user = (await api.get('api/users')).body[0]
 
     const newBlog = {
       author: 'Tiina Teekkari',
-      url: 'www.tiina.com'
+      url: 'www.tiina.com',
+      userId: user._id
     }
 
-    await api
+    const result = await api
       .post('/api/blogs')
       .send(newBlog)
       .expect(400)
+
+    expect(result.body.error).toContain('title')
 
   })
 
-  test('if url is undefined status is 400', async () => {
+  test('if url is undefined status is 400 and the error message is relevant', async () => {
+
+    const user = (await api.get('api/users')).body[0]
 
     const newBlog = {
       title: 'even more fun blogs',
-      author: 'Tiina Teekkari'
+      author: 'Tiina Teekkari',
+      userId: user._id
     }
 
-    await api
+    const result = await api
       .post('/api/blogs')
       .send(newBlog)
       .expect(400)
+
+    expect(result.body.error).toContain('url')
 
   })
 })
 
 
-describe('Deleting blogs',  () => {
+describe('Deleting blogs', () => {
 
   test('deleting a blog works', async () => {
     const blogsInTheStart = await api.get('/api/blogs')

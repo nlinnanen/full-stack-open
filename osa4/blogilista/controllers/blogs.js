@@ -15,6 +15,13 @@ blogsRouter.get('/', async (request, response) => {
 blogsRouter.post('/', async (request, response) => {
   const body = request.body
 
+  if(!body.userId){
+    throw {
+      name: 'ValidationError',
+      message: 'userId must be defined'
+    }
+  }
+
   const user = await User.findById(body.userId)
 
   const blog = new Blog({

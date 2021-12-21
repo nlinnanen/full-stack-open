@@ -2,8 +2,9 @@ POST http://localhost:3001/api/blogs
 Content-Type: application/json
 
 {
-  "title": "Another fun blog",
+  "title": "Another really fun blog",
   "author": "Tiina Teekkari",
+  "userId": "61c08bcbf79dabb1749d848e",
   "url": "www.tiina.com",
   "likes": 4
 }

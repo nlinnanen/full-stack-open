@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
-
+const jwt = require('jsonwebtoken')
 
 const Blog = require('../models/blog')
 const User = require('../models/user')
@@ -52,8 +52,12 @@ const initialBlogs = [
   }
 ]
 
+const getTokenFor = (user) => {
+  return jwt.sign({ username: user.username, id: user._id }, process.env.SECRET)
+}
 
 module.exports = {
   initialBlogs,
-  initialUsersGenerator
+  initialUsersGenerator,
+  getTokenFor
 }

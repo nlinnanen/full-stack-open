@@ -53,7 +53,7 @@ describe('Get method', () => {
 describe('Posting blogs', () => {
   test('post writes correct data to database', async () => {
 
-    const user = (await api.get('api/users')).body[0]
+    const user = await User.findOne({})
 
     const newBlog = {
       title: 'Another fun blog',
@@ -81,7 +81,7 @@ describe('Posting blogs', () => {
 
   test('default value to likes is 0', async () => {
 
-    const user = (await api.get('api/users')).body[0]
+    const user = await User.findOne({})
 
     const newBlog = {
       title: 'Another fun blog',
@@ -107,8 +107,7 @@ describe('Posting blogs', () => {
 
   test('if title is undefined status is 400 and the error message is relevant', async () => {
 
-    const user = (await api.get('api/users')).body[0]
-
+    const user = await User.findOne({})
     const newBlog = {
       author: 'Tiina Teekkari',
       url: 'www.tiina.com',
@@ -126,7 +125,7 @@ describe('Posting blogs', () => {
 
   test('if url is undefined status is 400 and the error message is relevant', async () => {
 
-    const user = (await api.get('api/users')).body[0]
+    const user = await User.findOne({})
 
     const newBlog = {
       title: 'even more fun blogs',

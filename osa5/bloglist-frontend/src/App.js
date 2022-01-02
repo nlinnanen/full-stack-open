@@ -3,6 +3,7 @@ import Blog from './components/Blog.jsx'
 import Login from './components/Login'
 import Error from './components/Message'
 import BlogForm from './components/BlogForm'
+import Togglable from './components/Togglable.jsx'
 import blogService from './services/blogs'
 
 const App = () => {
@@ -53,9 +54,11 @@ const App = () => {
     return (
       <div>
         <Error message={message} />
-        <BlogForm user={user} editMessage={editMessage} blogs={blogs} setBlogs={setBlogs}/>
         <h2>Blogs</h2>
         <p>{user.name} logged in <button onClick={handleLogOut}>Log out</button></p>
+        <Togglable buttonLabel='Create new blog'>
+          <BlogForm user={user} editMessage={editMessage} blogs={blogs} setBlogs={setBlogs}/>
+        </Togglable>
         {blogs.map(blog =>
           <Blog key={blog.id} blog={blog} />
         )}

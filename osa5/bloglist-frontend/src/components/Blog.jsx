@@ -1,18 +1,20 @@
 import React from 'react'
 import { useState } from 'react'
 
-const Blog = ({blog}) => {
+const Blog = ({blog, handleLike}) => {
   const [showInfo, setShowInfo] = useState(false)
 
   if(showInfo) {
     return (
       <div className='blogInfo full'>
         <div className='flex-space-apart'>
-          {blog.title}<button onClick={() => setShowInfo(false)}>hide</button>
+          {blog.title}
+          <button onClick={() => setShowInfo(false)}>hide</button>
         </div>
         <div>{blog.url}</div>
         <div className='flex-space-apart'>
-          Likes &nbsp; {blog.likes} <button onClick={() => setShowInfo(false)}>Like</button>
+          Likes &nbsp; {blog.likes}
+          <button onClick={() => handleLike(blog)}>Like</button>
         </div>
         <div>{blog.user.username}</div>
       </div>

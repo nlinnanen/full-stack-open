@@ -40,11 +40,7 @@ const App = () => {
     window.localStorage.removeItem('loggedBloglistUser')
   }
 
-  const handleLike = async blog => {
-    const newBlog = await blogService.like(blog)
-    const newBlogs = blogs.filter(b => b.id!==blog.id).concat(newBlog)
-    setBlogs(newBlogs)
-  }
+
 
   if (user === null) {
     return (
@@ -70,7 +66,7 @@ const App = () => {
             b.likes - a.likes
           )
           .map(blog =>
-            <Blog key={blog.id} blog={blog} handleLike={handleLike}/>
+            <Blog key={blog.id} blog={blog} blogs={blogs} setBlogs={setBlogs}/>
           )
         }
       </div>

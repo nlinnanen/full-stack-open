@@ -1,8 +1,22 @@
-import React from 'react'
-import { useState } from 'react'
+import React, { useState } from 'react'
+import blogService from '../services/blogs'
 
-const Blog = ({blog, handleLike}) => {
+const Blog = ({blog, setBlogs, blogs}) => {
   const [showInfo, setShowInfo] = useState(false)
+
+
+  const handleLike = async () => {
+    const newBlog = await blogService.like(blog)
+    const newBlogs = blogs.filter(b => b.id!==blog.id).concat(newBlog)
+    setBlogs(newBlogs)
+  }
+
+  const handleDelte= async () => {
+    if(window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
+      await blogService.remove(blog.id)
+      setBlogs(blogs.filter(b => b.id!==blog.id))
+    }
+  }
 
   if(showInfo) {
     return (
@@ -14,9 +28,10 @@ const Blog = ({blog, handleLike}) => {
         <div>{blog.url}</div>
         <div className='flex-space-apart'>
           Likes &nbsp; {blog.likes}
-          <button onClick={() => handleLike(blog)}>Like</button>
+          <button onClick={handleLike}>Like</button>
         </div>
         <div>{blog.user.username}</div>
+        <div><button onClick={handleDelte}>Delete</button></div>
       </div>
     )
   } else {

@@ -36,7 +36,7 @@ const App = () => {
 
   const handleLogOut = () => {
     setUser(null)
-    editMessage({message: `Logged out`, class: 'message'})
+    editMessage({ message: 'Logged out', class: 'message' })
     window.localStorage.removeItem('loggedBloglistUser')
   }
 
@@ -47,8 +47,8 @@ const App = () => {
       <div>
         <Error message={message} />
         <Login
-        setUser={setUser}
-        editMessage={editMessage}
+          setUser={setUser}
+          editMessage={editMessage}
         />
       </div>
     )
@@ -62,7 +62,7 @@ const App = () => {
           <BlogForm user={user} editMessage={editMessage} blogs={blogs} setBlogs={setBlogs}/>
         </Togglable>
         {blogs
-          .sort((a, b) => 
+          .sort((a, b) =>
             b.likes - a.likes
           )
           .map(blog =>

@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import blogService from '../services/blogs'
+import PropTypes from 'prop-types'
 
-const Blog = ({blog, setBlogs, blogs}) => {
+const Blog = ({ blog, setBlogs, blogs }) => {
   const [showInfo, setShowInfo] = useState(false)
 
 
@@ -41,9 +42,15 @@ const Blog = ({blog, setBlogs, blogs}) => {
           {blog.title} {blog.author}
           <button onClick={() => setShowInfo(true)}>view</button>
         </div>
-      </div>  
+      </div>
     )
   }
+}
+
+Blog.propTypes = {
+  blog: PropTypes.string.isRequired,
+  setBlogs: PropTypes.func.isRequired,
+  blogs: PropTypes.object.isRequired
 }
 
 export default Blog

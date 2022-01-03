@@ -5,7 +5,8 @@ const BlogForm = ({ user, addBlog }) => {
   const [newAuthor,setNewAuthor] = useState('')
   const [newUrl,setNewUrl] = useState('')
 
-  const handleNewBlog = async () => {
+  const handleNewBlog = async event => {
+    event.preventDefault()
 
     addBlog({
       title: newTitle,
@@ -25,15 +26,15 @@ const BlogForm = ({ user, addBlog }) => {
       <form onSubmit={handleNewBlog}>
 
         <div className='inputfield'>
-          title: <input type="text" onChange={(event) => setNewTitle(event.target.value)}/>
+          title: <input id='title' type="text" onChange={(event) => setNewTitle(event.target.value)}/>
         </div>
 
         <div className='inputfield'>
-          author: <input type="text" onChange={(event) => setNewAuthor(event.target.value)}/>
+          author: <input id='author' type="text" onChange={(event) => setNewAuthor(event.target.value)}/>
         </div>
 
         <div className='inputfield'>
-          url: <input type="text" onChange={(event) => setNewUrl(event.target.value)}/>
+          url: <input id='url' type="text" onChange={(event) => setNewUrl(event.target.value)}/>
         </div>
 
         <button type="submit">Add new</button>

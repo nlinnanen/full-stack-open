@@ -1,9 +1,9 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import blogService from '../services/blogs'
 import loginService from '../services/login'
 
 const Login = ({
-  editMessage,
+  setMessageWithTimeout,
   setUser
 }) => {
   const [username, setUsername] = useState('')
@@ -20,14 +20,14 @@ const Login = ({
       window.localStorage.setItem('loggedBloglistUser', JSON.stringify(user))
       blogService.setToken(user.token)
 
-      editMessage({ message: `Logged in as ${user.username}`, class: 'message' })
+      setMessageWithTimeout({ message: `Logged in as ${user.username}`, class: 'message' })
 
       setUser(user)
       setUsername('')
       setPassword('')
 
     } catch (exception) {
-      editMessage({ message: 'wrong credentials', class: 'error' })
+      setMessageWithTimeout({ message: 'wrong credentials', class: 'error' })
     }
   }
 

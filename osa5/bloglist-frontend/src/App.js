@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog.jsx'
-import Login from './components/Login'
+import Login from './components/Login.jsx'
 import Error from './components/Message'
 import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable.jsx'
@@ -27,7 +27,7 @@ const App = () => {
     }
   }, [])
 
-  const editMessage = newMessage => {
+  const setMessageWithTimeout = newMessage => {
     setMessage(newMessage)
     setTimeout(() => {
       setMessage(null)
@@ -36,10 +36,34 @@ const App = () => {
 
   const handleLogOut = () => {
     setUser(null)
-    editMessage({ message: 'Logged out', class: 'message' })
+    setMessageWithTimeout({ message: 'Logged out', class: 'message' })
     window.localStorage.removeItem('loggedBloglistUser')
   }
 
+  const handleLike = async blog => {
+    const newBlog = await blogService.like(blog)
+    const newBlogs = blogs.filter(b => b.id!==blog.id).concat(newBlog)
+    setBlogs(newBlogs)
+  }
+
+  const handleDelete= async blog => {
+    if(user.id === blog.user.id && window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
+      await blogService.remove(blog.id)
+      setBlogs(blogs.filter(b => b.id!==blog.id))
+    } else if (user.id === blog.user.id) {
+      setMessageWithTimeout('Not the user that created the blog', 'error')
+    }
+  }
+
+  const addBlog = async newBlog => {
+    try {
+      const response = await blogService.create(newBlog, user.token)
+      setBlogs(blogs.concat(response.body))
+      setMessageWithTimeout({ message: `Added "${response.title}"`, class: 'message' })
+    } catch (execption) {
+      setMessageWithTimeout({ message: execption, class: 'error' })
+    }
+  }
 
 
   if (user === null) {
@@ -48,27 +72,43 @@ const App = () => {
         <Error message={message} />
         <Login
           setUser={setUser}
-          editMessage={editMessage}
+          setMessageWithTimeout={setMessageWithTimeout}
         />
       </div>
     )
   } else {
     return (
-      <div>
-        <Error message={message} />
-        <h2>Blogs</h2>
-        <p>{user.name} logged in <button onClick={handleLogOut}>Log out</button></p>
-        <Togglable buttonLabel='Create new blog'>
-          <BlogForm user={user} editMessage={editMessage} blogs={blogs} setBlogs={setBlogs}/>
-        </Togglable>
-        {blogs
-          .sort((a, b) =>
-            b.likes - a.likes
-          )
-          .map(blog =>
-            <Blog key={blog.id} blog={blog} blogs={blogs} setBlogs={setBlogs}/>
-          )
-        }
+      <div className='container'>
+        <header>
+          <Error message={message} />
+
+          <h2>Blogs</h2>
+
+          <p className='flex-space-apart'>
+            {user.name} logged in <button onClick={handleLogOut}>Log out</button>
+          </p>
+        </header>
+
+        <div className='blogForm'>
+          <Togglable buttonLabel='Create new blog'>
+            <BlogForm user={user} addBlog={addBlog}/>
+          </Togglable>
+        </div>
+
+        <div className="blogs">
+          {blogs
+            .sort((a, b) => b.likes - a.likes)
+            .map(blog =>
+              <Blog
+                key={blog.id}
+                blog={blog}
+                handleLike={() => handleLike(blog)}
+                handleDelete={() => handleDelete(blog)}
+              />
+            )
+          }
+        </div>
+
       </div>
     )
   }

@@ -7,22 +7,22 @@ const Blog = ({ blog, handleLike, handleDelete }) => {
   if(showInfo) {
     return (
       <div className='blogInfo full'>
-        <div className='flex-space-apart'>
+        <div className='flex-space-apart titleAndAuthor'>
           {blog.title} {blog.author}
           <button onClick={() => setShowInfo(false)}>hide</button>
         </div>
         <div>
           {blog.url}
         </div>
-        <div className='flex-space-apart'>
+        <div className='flex-space-apart like-container'>
           Likes &nbsp; {blog.likes}
-          <button onClick={handleLike}>Like</button>
+          <button className='like-btn' onClick={handleLike}>Like</button>
         </div>
         <div>
           {blog.user.name}
         </div>
         <div>
-          <button onClick={handleDelete}>Delete</button>
+          <button className='delete-btn' onClick={handleDelete}>Delete</button>
         </div>
       </div>
     )
@@ -31,7 +31,7 @@ const Blog = ({ blog, handleLike, handleDelete }) => {
       <div className='blogInfo'>
         <div className='flex-space-apart'>
           {blog.title} {blog.author}
-          <button onClick={() => setShowInfo(true)}>view</button>
+          <button className='view-btn' onClick={() => setShowInfo(true)}>view</button>
         </div>
       </div>
     )

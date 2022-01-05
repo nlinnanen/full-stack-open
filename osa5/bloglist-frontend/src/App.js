@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog.jsx'
 import Login from './components/Login.jsx'
 import Error from './components/Message'
@@ -11,6 +11,7 @@ const App = () => {
   const [message, setMessage] = useState(null)
   const [user, setUser] = useState(null)
 
+  const blogFormRef = useRef()
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -41,28 +42,34 @@ const App = () => {
   }
 
   const handleLike = async blog => {
-    const newBlog = await blogService.like(blog)
-    const newBlogs = blogs.filter(b => b.id!==blog.id).concat(newBlog)
+    blogService.like(blog)
+    const newBlogs = blogs.filter(b => b.id !== blog.id).concat({ ...blog, likes: blog.likes + 1 })
     setBlogs(newBlogs)
   }
 
-  const handleDelete= async blog => {
-    if(user.id === blog.user.id && window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
+  const handleDelete = async blog => {
+    if (user.id === blog.user.id && window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
       await blogService.remove(blog.id)
-      setBlogs(blogs.filter(b => b.id!==blog.id))
+      setBlogs(blogs.filter(b => b.id !== blog.id))
+      setMessageWithTimeout({ message: `Removed blog ${blog.title} by ${blog.author}`, class: 'message' })
     } else if (user.id === blog.user.id) {
-      setMessageWithTimeout('Not the user that created the blog', 'error')
+      setMessageWithTimeout({ message: 'Not the user that created the blog', class: 'error' })
     }
   }
 
   const addBlog = async newBlog => {
-    try {
-      const response = await blogService.create(newBlog, user.token)
-      setBlogs(blogs.concat(response.body))
-      setMessageWithTimeout({ message: `Added "${response.title}"`, class: 'message' })
-    } catch (execption) {
-      setMessageWithTimeout({ message: execption, class: 'error' })
-    }
+    blogService
+      .create(newBlog, user.token)
+      .then(response => {
+        setBlogs(blogs.concat(response))
+        blogFormRef.current.toggleVisibilty()
+        setMessageWithTimeout({ message: `Added "${response.title}"`, class: 'message' })
+      })
+      .catch(error => {
+        console.log(error)
+        setMessageWithTimeout({ message: 'Invalid blog or user', class: 'error' })
+      })
+
   }
 
 
@@ -90,8 +97,8 @@ const App = () => {
         </header>
 
         <div className='blogForm'>
-          <Togglable buttonLabel='Create new blog'>
-            <BlogForm user={user} addBlog={addBlog}/>
+          <Togglable buttonLabel='Create new blog' ref={blogFormRef}>
+            <BlogForm user={user} addBlog={addBlog} />
           </Togglable>
         </div>
 

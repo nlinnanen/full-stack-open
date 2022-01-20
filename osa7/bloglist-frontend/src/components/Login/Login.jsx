@@ -14,7 +14,7 @@ const Login = () => {
       dispatch(login({ username, password }))
       dispatch(setMessage(`Logged in as ${username}`))
     } catch (error) {
-      setError('Wrong credentials')
+      dispatch(setError('Wrong credentials'))
     }
 
     setUsername('')
@@ -24,9 +24,9 @@ const Login = () => {
 
   return (
     <form onSubmit={handleLogin}>
-      <h2>Log in to application</h2>
-      <div>
-        username
+      <h2 className='text-xl my-1'>Log in to application</h2>
+      <div className='flex place-content-between space-x-8'>
+        <div className='capitalize'>username</div>
         <input
           type="text"
           value={username}
@@ -35,8 +35,8 @@ const Login = () => {
           onChange={({ target }) => setUsername(target.value)}
         />
       </div>
-      <div>
-        password
+      <div className='flex place-content-between space-x-8'>
+        <div className='capitalize'>password</div>
         <input
           type="password"
           value={password}

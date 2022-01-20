@@ -9,13 +9,12 @@ const Togglable = (props) => {
 
   if(!show) {
     return (
-      <div><button className="togglable-button" onClick={() => dispatch(toggleVisibilty())}>{props.buttonLabel}</button></div>
+      <div><button className="btn" onClick={() => dispatch(toggleVisibilty())}>{props.buttonLabel}</button></div>
     )
   } else {
     return (
-      <div>
+      <div className=''>
         {props.children}
-        <button className="cancel-togglabe" onClick={() => dispatch(toggleVisibilty())}>Cancel</button>
       </div>
     )
   }

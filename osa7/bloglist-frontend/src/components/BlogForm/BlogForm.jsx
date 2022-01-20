@@ -33,23 +33,23 @@ const BlogForm = () => {
 
   return (
     <>
-      <h2>New blog</h2>
-      <form onSubmit={handleNewBlog}>
+      <h2 className='text-xl'>New blog</h2>
+      <form onSubmit={handleNewBlog} className='my-4'>
 
-        <div className='inputfield'>
-          title: <input value={newTitle} id='title' type="text" onChange={event => setNewTitle(event.target.value)}/>
+        <div className='flex place-content-between space-x-5'>
+          <div>title:</div> <input value={newTitle} id='title' type="text" onChange={event => setNewTitle(event.target.value)}/>
         </div>
 
-        <div className='inputfield'>
-          author: <input value={newAuthor} id='author' type="text" onChange={event => setNewAuthor(event.target.value)}/>
+        <div className='flex place-content-between space-x-5'>
+          <div>author:</div> <input value={newAuthor} id='author' type="text" onChange={event => setNewAuthor(event.target.value)}/>
         </div>
 
-        <div className='inputfield'>
-          url: <input value={newUrl} id='url' type="text" onChange={event => setNewUrl(event.target.value)}/>
+        <div className='flex place-content-between space-x-5'>
+          <div>url:</div> <input value={newUrl} id='url' type="text" onChange={event => setNewUrl(event.target.value)}/>
         </div>
 
-        <button id='add-blog-btn' type="submit">Add new</button>
-
+        <button className='col-span-1' type="submit">Add new</button>
+        <button className="" onClick={() => dispatch(toggleVisibilty())}>Cancel</button>
       </form>
     </>
   )

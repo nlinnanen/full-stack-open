@@ -23,6 +23,7 @@ const Blogs = () => {
       </Route>
       <Route path='/'>
         <div className="blogs">
+          <h2 className='text-xl'>Blogs</h2>
           {blogs
             .sort((a, b) => b.likes - a.likes)
             .map(blog =>

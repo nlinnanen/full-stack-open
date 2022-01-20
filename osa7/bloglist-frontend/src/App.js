@@ -28,17 +28,17 @@ const App = () => {
 
   if (user === null) {
     return (
-      <div>
+      <div className='flex flex-col justify-center items-center my-5'>
         <Notification />
         <Login />
       </div>
     )
   } else {
     return (
-      <div className='container'>
+      <div className='flex flex-col justify-center items-center'>
 
         <Header />
-        <h2>Blog app</h2>
+        <h2 className='text-3xl'>Blog app</h2>
         <Switch>
           <Route path='/users'>
             <Users />

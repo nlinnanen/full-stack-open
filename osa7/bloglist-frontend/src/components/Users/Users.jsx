@@ -33,8 +33,8 @@ const Users = () => {
         <UserFull user={userMatch} />
       </Route>
       <Route path='/users'>
-        <div>
-          <div className='flex-space-apart'>
+        <div className='my-5'>
+          <div className='flex place-content-between space-x-20'>
             <div><strong>User</strong></div> <div><strong>Blogs created</strong></div>
           </div>
           {usersByBlogCount.map(user => <UserBlogcount key={user.id} user={user} />)}
@@ -47,7 +47,7 @@ const Users = () => {
 
 const UserBlogcount = ({ user }) => {
   return (
-    <div className='flex-space-apart'>
+    <div className='flex place-content-between space-x-20'>
       <div><Link to={`/users/${user.id}`}>{user.name}</Link></div> <div>{user.blogs}</div>
     </div>
   )

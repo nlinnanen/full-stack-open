@@ -44,27 +44,27 @@ const Blog = ({ blog }) => {
 
   return (
     <div className='blogInfo full'>
-      <div className='flex-space-apart titleAndAuthor'>
-        {blog.title} {blog.author}
+      <div className='font-medium capitalize'>
+        {blog.title} by {blog.author}
       </div>
       <div>
         {blog.url}
       </div>
-      <div className='flex-space-apart like-container'>
-        Likes &nbsp; {blog.likes}
-        <button className='like-btn' onClick={handleLike}>Like</button>
+      <div className='flex items-center space-x-5'>
+        <div>Likes &nbsp; {blog.likes}</div>
+        <button className='btn like-btn my-0' onClick={handleLike}>Like</button>
       </div>
       <div>
         Added by {blog.user.name}
       </div>
       <div>
-        <button className='delete-btn' onClick={handleDelete}>Delete</button>
+        <button className='btn delete-btn' onClick={handleDelete}>Delete</button>
       </div>
       <div>
-        <h3>comments</h3>
+        <h3 className='font-medium capitalize'>comments</h3>
         <form onSubmit={handleComment}>
           <input type='text' name='comment'/>
-          <button type='submit'>add comment</button>
+          <button className='btn' type='submit'>add comment</button>
         </form>
         <ul>
           {blog.comments.map((comment, i) =>

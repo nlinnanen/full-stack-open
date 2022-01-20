@@ -15,16 +15,15 @@ const Header = () => {
   }
 
   return (
-    <header className='flex-space-apart'>
+    <div className='flex flex-col items-center'>
+      <header className='flex space-x-10 items-center'>
+        <Link to='/blogs'>blogs</Link>
+        <Link to='/users'>users</Link>
+        <span>{user.name} logged in</span>
+        <button className='btn' onClick={handleLogout}>Log out</button>
+      </header>
       <Notification />
-
-      <Link to='/blogs'>blogs</Link>
-      <Link to='/users'>users</Link>
-
-      <span>{user.name} logged in</span>
-
-      <button onClick={handleLogout}>Log out</button>
-    </header>
+    </div>
   )
 
 }

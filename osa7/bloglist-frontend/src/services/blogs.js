@@ -44,5 +44,14 @@ const remove = async id => {
   return response.data
 }
 
+const comment = async (comment, id) => {
+  const config = {
+    headers: { Authorization: token }
+  }
+
+  const response = await axios.post(`${baseUrl}/${id}/comment`, { comment }, config)
+  return response.data
+}
+
 // eslint-disable-next-line
-export default { getAll, create, setToken, like, remove }
+export default { getAll, create, setToken, like, remove, comment }

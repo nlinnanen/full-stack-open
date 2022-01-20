@@ -1,10 +1,9 @@
-POST http://localhost:3001/api/blogs
+POST http://localhost:3003/api/blogs
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRpaW5hIiwiaWQiOiI2MWMxYzRkM2IyNGJkMWI1YWY2ZTYxN2MiLCJpYXQiOjE2NDAwODk0Mjd9.cKfXEvKvktkzw8nslbEGA3eajG8ysUfnSt0iAqICC8E
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlRpaW5hMyIsImlkIjoiNjFlN2QyYTRhYmFmNDJlOWQ5OWFjYTM2IiwiaWF0IjoxNjQyNTgyNzAyfQ.0o1h6ZpY5o3M9AsuT9ljkF6Skn915-lpdO12z8kYXdE
 
 {
-  "title": "Another really fun blog",
-  "author": "Tiina Teekkari",
-  "url": "www.tiina.com",
-  "likes": 4
+  "title": "Should have different user",
+  "author": "Tiina3",
+  "url": "www.tiina.com"
 }

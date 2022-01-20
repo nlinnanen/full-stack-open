@@ -61,7 +61,7 @@ describe('Bloglist', function () {
         cy.get('#title').type(`${name} title`)
         cy.get('#author').type(`${name} author`)
         cy.get('#url').type(`www.${name}website.com`)
-  
+
         cy.get('#add-blog-btn').click()
       }
       beforeEach(function () {

@@ -23,7 +23,7 @@ const calculateRating = (avg: number): [number, string] => {
   }
 };
 
-const calculateExercises = (
+export const calculateExercises = (
   exercises: Array<number>,
   target: number
 ): exerciseValuation => {

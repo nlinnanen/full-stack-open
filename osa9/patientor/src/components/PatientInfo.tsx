@@ -1,12 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import { Icon } from 'semantic-ui-react';
+import { Icon, Button } from 'semantic-ui-react';
 import { SemanticICONS } from 'semantic-ui-react/dist/commonjs/generic';
 
-import { useStateValue } from '../state';
+import { addEntry, useStateValue } from '../state';
 import { apiBaseUrl } from '../constants';
-import AddEntryForm from './AddEntryForm';
 import {
   Diagnosis,
   Entry,
@@ -14,15 +13,20 @@ import {
   HospitalEntry,
   OccupationalHealthcareEntry,
   HealthCheckEntry,
+  EntryWithoutId,
 } from '../types';
+import EntryForms from './EntryForms';
 
 const PatientInfo = () => {
-  const [diagnoses, setDiagnoses] = React.useState<Diagnosis[]>([]);
+  const [formSelection, setFormSelection] =
+    React.useState<Entry['type']>('HealthCheck');
+  const [diagnoses, setDiagnoses] = useState<Diagnosis[]>([]);
   const { id } = useParams<{ id: string }>();
   const [
     {
       patients: { [id]: patient },
     },
+    dispatch,
   ] = useStateValue();
   React.useEffect(() => {
     const fetchDiagnoses = async () => {
@@ -37,6 +41,18 @@ const PatientInfo = () => {
     };
     void fetchDiagnoses();
   }, []);
+
+  const handleNewEntry = async (values: EntryWithoutId) => {
+    try {
+      const { data: newEntry } = await axios.post<Entry>(
+        `${apiBaseUrl}/patients/${id}/entries`,
+        values
+      );
+      dispatch(addEntry(newEntry, patient));
+    } catch (error: unknown) {
+      console.error(error);
+    }
+  };
 
   const genderIconName = new Map<Gender, SemanticICONS>();
   genderIconName.set(Gender.Female, 'venus');
@@ -58,9 +74,18 @@ const PatientInfo = () => {
       {patient.entries.map((e) => (
         <EntryComponent key={e.date} entry={e} diagnoses={diagnoses} />
       ))}
-      <AddEntryForm
-        onSubmit={() => console.log('submit')}
-        onCancel={() => console.log('cancel')}
+      <Button onClick={() => setFormSelection('Hospital')}>Hospital</Button>
+      <Button onClick={() => setFormSelection('OccupationalHealthcare')}>
+        OccupationalHealthcare
+      </Button>
+      <Button onClick={() => setFormSelection('HealthCheck')}>
+        HealthCheck
+      </Button>
+
+      <EntryForms
+        formType={formSelection}
+        handleNewEntry={handleNewEntry}
+        diagnoses={diagnoses}
       />
     </div>
   );

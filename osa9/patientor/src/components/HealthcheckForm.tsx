@@ -1,21 +1,32 @@
-import { EntryWithoutId } from '../types';
 import React from 'react';
 import { Grid, Button } from 'semantic-ui-react';
 import { Field, Formik, Form } from 'formik';
-import { TextField } from '../AddPatientModal/FormField';
 
-interface PropTypes {
-  onSubmit: (values: EntryWithoutId) => void;
+import {
+  DiagnosisSelection,
+  NumberField,
+  TextField,
+} from '../AddPatientModal/FormField';
+import { Diagnosis, HealthCheckEntry } from '../types';
+
+/*
+ * use type Patient, but omit id and entries,
+ * because those are irrelevant for new patient object.
+ */
+
+interface Props {
+  onSubmit: (values: Omit<HealthCheckEntry, 'id'>) => void;
   onCancel: () => void;
+  diagnoses: Diagnosis[];
 }
-const AddEntryForm = ({ onSubmit, onCancel }: PropTypes) => {
+
+export const HealthCheckForm = ({ onSubmit, onCancel, diagnoses }: Props) => {
   return (
     <Formik
       initialValues={{
         description: '',
         date: '',
         specialist: '',
-        diagnosisCodes: [],
         type: 'HealthCheck',
         healthCheckRating: 0,
       }}
@@ -26,8 +37,11 @@ const AddEntryForm = ({ onSubmit, onCancel }: PropTypes) => {
         if (!values.description) {
           errors.description = requiredError;
         }
-        if (!values.date) {
-          errors.date = requiredError;
+        if (
+          !values.date ||
+          !/\d\d\d\d-([1-9]|1[0-2])-([1-9]|[12]\d|3[01])/.test(values.date)
+        ) {
+          errors.date = requiredError + ' and needs to be a correct date';
         }
         if (!values.specialist) {
           errors.specialist = requiredError;
@@ -38,32 +52,39 @@ const AddEntryForm = ({ onSubmit, onCancel }: PropTypes) => {
         return errors;
       }}
     >
-      {({ isValid, dirty }) => {
+      {({ isValid, dirty, setFieldValue, setFieldTouched }) => {
         return (
           <Form className="form ui">
             <Field
-              label="description"
-              placeholder="description"
-              description="description"
+              label="Description"
+              placeholder="Description"
+              name="description"
               component={TextField}
             />
             <Field
-              label="Date of entry"
+              label="Date"
               placeholder="YYYY-MM-DD"
               name="date"
               component={TextField}
             />
             <Field
               label="Specialist"
-              placeholder="specialist"
-              name="secialist"
+              placeholder="Specialist"
+              name="specialist"
               component={TextField}
             />
             <Field
               label="Health check rating"
-              placeholder="rating"
-              name="HealthCheckRating"
-              component={TextField}
+              placeholder="Rating"
+              name="healthCheckRating"
+              component={NumberField}
+              min={0}
+              max={3}
+            />
+            <DiagnosisSelection
+              setFieldValue={setFieldValue}
+              setFieldTouched={setFieldTouched}
+              diagnoses={Object.values(diagnoses)}
             />
             <Grid>
               <Grid.Column floated="left" width={5}>
@@ -89,4 +110,4 @@ const AddEntryForm = ({ onSubmit, onCancel }: PropTypes) => {
   );
 };
 
-export default AddEntryForm;
+export default HealthCheckForm;

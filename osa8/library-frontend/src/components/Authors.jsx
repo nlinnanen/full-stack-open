@@ -6,8 +6,8 @@ import { ALL_AUTHORS, EDIT_AUTHOR } from '../queries'
 const Authors = (props) => {
   const result = useQuery(ALL_AUTHORS)
   const [ editBook ] = useMutation(EDIT_AUTHOR)
-  const [selectedName, setSelectedName] = useState(null)
-  const [setBornTo, setSetBornTo] = useState(null)
+  const [selectedName, setSelectedName] = useState("")
+  const [setBornTo, setSetBornTo] = useState("")
 
   const submit = async (event) => {
     event.preventDefault()

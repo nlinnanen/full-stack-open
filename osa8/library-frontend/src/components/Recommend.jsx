@@ -4,7 +4,7 @@ import { ALL_BOOKS, ME } from "../queries"
 
 const Recommend = ({show}) => {
   const meResult = useQuery(ME)
-  const bookResult = useQuery(ALL_BOOKS, { variables: {genre: meResult.data?.me.favoriteGenre} })
+  const bookResult = useQuery(ALL_BOOKS, { variables: {genre: meResult.data?.me?.favoriteGenre} })
   if(!show) {
     return null
   }
@@ -15,7 +15,7 @@ const Recommend = ({show}) => {
     )
   }
 
-  const genre = meResult.data.me.favoriteGenre
+  const genre = meResult.data.me?.favoriteGenre
   const books = bookResult.data.allBooks
   return (
     <div>

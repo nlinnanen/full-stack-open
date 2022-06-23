@@ -16,7 +16,7 @@ const Books = (props) => {
 
   const books = result.data.allBooks
   const genres = [...new Set(books.reduce((a, b) => a.concat(b.genres), []))]
-  console.log(books)
+  
   return (
     <div>
       <h2>books</h2>
